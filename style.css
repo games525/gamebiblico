@@ -1,0 +1,300 @@
+/* =========================================================
+   AVENTURAS DA BÍBLIA – style.css
+   ========================================================= */
+
+/* ---------- 1. VARIÁVEIS (cores e sprites) ---------- */
+:root {
+  --ceu: #7fd0ff;
+  --grama: #5cc45e;
+  --grama-escura: #3a9a45;
+  --sol: #ffd23f;
+  --azul: #3d8bff;
+  --verde: #2fb344;
+  --laranja: #ff9f1c;
+  --vermelho: #ff5c5c;
+  --roxo: #9b6bff;
+  --papel: #fff8e1;
+  --tinta: #2b2d42;
+
+  /* ┌──────────────────────────────────────────────────────────┐
+     │  ONDE COLOCAR SUAS IMAGENS DE PIXEL ART (16 bits)        │
+     │  Troque `none` por url('caminho/da/imagem.png').         │
+     │  Exemplo:  --img-leitura: url('img/menino-lendo.png');   │
+     │  Enquanto estiver `none`, aparece um emoji provisório.   │
+     └──────────────────────────────────────────────────────────┘ */
+  --img-menu: none;         /* ← COLOQUE AQUI o sprite do MENU      (.sprite-menu)       */
+  --img-leitura: none;      /* ← COLOQUE AQUI o sprite de LEITURA   (.sprite-leitura)    */
+  --img-celebracao: none;   /* ← COLOQUE AQUI o sprite de CELEBRAÇÃO (.sprite-celebracao) */
+
+  /* Tamanhos dos sprites (ajuste ao tamanho das suas imagens) */
+  --tam-menu: 96px;
+  --tam-leitura: 112px;
+  --tam-celebracao: 144px;
+
+  --fonte-pixel: 'Press Start 2P', 'Courier New', monospace;
+  --fonte-texto: 'Nunito', 'Trebuchet MS', Arial, sans-serif;
+  --tempo-tela: 0.35s;
+}
+
+/* ---------- 2. BASE ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--fonte-texto);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: var(--tinta);
+  /* céu em faixas (efeito 16-bits) + grama no rodapé */
+  background:
+    linear-gradient(to bottom,
+      var(--ceu) 0 70%, #96daff 70% 80%, #b0e3ff 80% 100%);
+  background-attachment: fixed;
+  padding-bottom: 90px;
+  overflow-x: hidden;
+}
+
+/* Faixa de grama fixa embaixo */
+body::after {
+  content: "";
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: 48px;
+  background:
+    repeating-linear-gradient(90deg, var(--grama) 0 16px, var(--grama-escura) 16px 32px) top / 100% 16px no-repeat,
+    var(--grama);
+  border-top: 4px solid var(--tinta);
+  z-index: -1;
+}
+
+h1, h2, h3 { font-family: var(--fonte-pixel); line-height: 1.5; margin: 0 0 1rem; }
+
+:focus-visible { outline: 4px solid var(--roxo); outline-offset: 3px; }
+
+[hidden] { display: none !important; }
+
+/* ---------- 3. NUVENS PIXELADAS ---------- */
+.nuvens { position: fixed; inset: 0; pointer-events: none; z-index: -1; }
+.nuvens::before {
+  content: "";
+  position: absolute; top: 110px; left: -200px;
+  width: 16px; height: 16px; background: #fff;
+  box-shadow:
+    16px 0 #fff, 32px 0 #fff, 48px 0 #fff, 64px 0 #fff, 80px 0 #fff,
+    16px -16px #fff, 32px -16px #fff, 48px -16px #fff, 64px -16px #fff,
+    32px -32px #fff, 48px -32px #fff;
+  transform: scale(2);
+  animation: nuvem 60s linear infinite;
+}
+@keyframes nuvem { to { left: 110vw; } }
+
+/* ---------- 4. TOPO ---------- */
+.topo {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.75rem;
+  max-width: 960px; margin: 0 auto; padding: 1.25rem 1rem 0.5rem;
+}
+.topo h1 {
+  font-size: clamp(1rem, 4vw, 1.7rem);
+  margin: 0;
+  color: #fff;
+  text-shadow: 3px 3px 0 var(--tinta), -1px -1px 0 var(--tinta), 1px -1px 0 var(--tinta), -1px 1px 0 var(--tinta);
+}
+.estrelas {
+  margin: 0; padding: 0.4rem 0.9rem;
+  font-family: var(--fonte-pixel); font-size: 0.85rem;
+  background: var(--sol); border: 4px solid var(--tinta);
+  box-shadow: 4px 4px 0 var(--tinta);
+}
+
+/* ---------- 5. TELAS + TRANSIÇÕES ---------- */
+main { max-width: 960px; margin: 0 auto; padding: 1rem; }
+
+.tela {
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition: opacity var(--tempo-tela) ease, transform var(--tempo-tela) ease;
+}
+.tela.visivel { opacity: 1; transform: none; }
+
+#tela-menu > h2 {
+  text-align: center; color: #fff; font-size: clamp(0.95rem, 3.5vw, 1.3rem);
+  text-shadow: 3px 3px 0 var(--tinta);
+}
+
+/* ---------- 6. BOTÕES GRANDES ---------- */
+.btn {
+  font-family: var(--fonte-pixel);
+  font-size: clamp(0.75rem, 2.8vw, 1rem);
+  line-height: 1.4;
+  min-height: 60px; min-width: 60px;
+  padding: 0.9rem 1.4rem;
+  color: #fff;
+  border: 4px solid var(--tinta);
+  box-shadow: 0 6px 0 var(--tinta);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.2s;
+  touch-action: manipulation;
+}
+.btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 0 var(--tinta); }
+.btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--tinta); }
+.btn-verde { background: var(--verde); }
+.btn-laranja { background: var(--laranja); }
+.btn-claro { background: #fff; color: var(--tinta); }
+
+.acoes { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1.5rem; }
+.tela > .btn { margin-bottom: 1rem; }
+
+/* ---------- 7. SPRITES (contêineres para suas imagens) ---------- */
+.sprite-menu, .sprite-leitura, .sprite-celebracao {
+  position: relative;
+  margin-inline: auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  image-rendering: pixelated;            /* mantém os pixels nítidos */
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  display: grid; place-items: center;
+}
+.sprite-menu      { width: var(--tam-menu);      height: var(--tam-menu);      background-image: var(--img-menu); }
+.sprite-leitura   { width: var(--tam-leitura);   height: var(--tam-leitura);   background-image: var(--img-leitura); }
+.sprite-celebracao{ width: var(--tam-celebracao);height: var(--tam-celebracao);background-image: var(--img-celebracao); }
+
+/* Emojis PROVISÓRIOS. Quando suas imagens estiverem prontas, APAGUE estas 3 linhas. */
+.sprite-menu::before       { content: "🧒"; font-size: 3.5rem; }
+.sprite-leitura::before    { content: "📖"; font-size: 4rem; }
+.sprite-celebracao::before { content: "🥳"; font-size: 5rem; }
+
+.sprite-menu { margin-bottom: 1.25rem; }
+.sprite-leitura { margin-bottom: 0.5rem; }
+
+/* Se usar SPRITESHEET (várias poses lado a lado), descomente e ajuste:
+   - troque 4 pelo número de quadros e 144px pela largura de UM quadro.
+.sprite-celebracao.animando {
+  background-size: calc(144px * 4) 100%;
+  animation: quadros 0.6s steps(4) infinite;
+}
+@keyframes quadros { to { background-position-x: calc(-144px * 4); } }
+*/
+
+/* ---------- 8. CARTÕES DE FASE (menu) ---------- */
+.fases {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.carta {
+  width: 100%; min-height: 190px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem;
+  padding: 1.2rem 0.8rem;
+  background: var(--cor-carta, var(--azul)); color: #fff;
+  border: 4px solid var(--tinta); box-shadow: 0 8px 0 var(--tinta);
+  font-family: var(--fonte-pixel); font-size: 0.8rem; line-height: 1.6; text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.carta:hover { transform: translateY(-6px); box-shadow: 0 14px 0 var(--tinta); }
+.carta:active { transform: translateY(8px); box-shadow: 0 0 0 var(--tinta); }
+.carta .icone { font-size: 3rem; line-height: 1; }
+.carta .status {
+  background: var(--papel); color: var(--tinta);
+  padding: 0.25rem 0.6rem; border: 3px solid var(--tinta); font-size: 0.6rem;
+}
+
+/* ---------- 9. PERGAMINHO (história, quiz, resultado) ---------- */
+.pergaminho {
+  background: var(--papel);
+  border: 4px solid var(--tinta);
+  box-shadow: 0 8px 0 var(--tinta), inset 0 0 0 6px #ffe9a8;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+}
+.pergaminho h2 { font-size: clamp(1rem, 3.8vw, 1.5rem); text-align: center; }
+
+.texto-historia { max-width: 62ch; margin-inline: auto; font-size: clamp(1.2rem, 3.4vw, 1.45rem); }
+.texto-historia p { margin: 0 0 1.1rem; }
+
+/* ---------- 10. QUIZ ---------- */
+.progresso-texto { text-align: center; font-family: var(--fonte-pixel); font-size: 0.75rem; margin: 0 0 0.6rem; }
+.barra { height: 24px; background: #fff; border: 4px solid var(--tinta); margin-bottom: 1.5rem; }
+.barra-cheia { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--sol) 0 12px, var(--laranja) 12px 16px); transition: width 0.4s ease; }
+
+.pergunta { font-size: clamp(0.9rem, 3.2vw, 1.15rem); text-align: center; margin-bottom: 1.25rem; }
+.opcoes { display: grid; gap: 1rem; max-width: 640px; margin-inline: auto; }
+
+.opcao {
+  display: flex; align-items: center; gap: 0.9rem; text-align: left;
+  min-height: 68px; padding: 0.8rem 1rem;
+  font-family: var(--fonte-texto); font-weight: 800; font-size: 1.2rem; line-height: 1.4;
+  color: var(--tinta); background: #fff;
+  border: 4px solid var(--tinta); box-shadow: 0 5px 0 var(--tinta);
+  cursor: pointer; transition: transform 0.1s, background 0.2s, box-shadow 0.1s;
+}
+.opcao:hover:not(:disabled) { background: #e8f3ff; transform: translateY(-2px); }
+.opcao:active:not(:disabled) { transform: translateY(5px); box-shadow: none; }
+.opcao .letra {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px;
+  font-family: var(--fonte-pixel); font-size: 0.85rem;
+  background: var(--sol); border: 3px solid var(--tinta);
+}
+.opcao:disabled { cursor: default; }
+.opcao.certa { background: #b9f6ca; }
+.opcao.errada { background: #ffc9c9; animation: tremer 0.4s; }
+.opcao.certa .letra::after { content: "✔"; }
+.opcao.errada .letra::after { content: "✖"; }
+.opcao.certa .letra, .opcao.errada .letra { font-size: 0; }
+.opcao.certa .letra::after, .opcao.errada .letra::after { font-size: 1.2rem; }
+
+.feedback { min-height: 2.2em; text-align: center; font-weight: 800; margin: 1.25rem 0 0; }
+.feedback.ok { color: #1b7a2c; }
+.feedback.erro { color: #b3261e; }
+
+@keyframes tremer { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+/* ---------- 11. RESULTADO + CELEBRAÇÃO ---------- */
+.resultado { text-align: center; }
+.pontos { font-family: var(--fonte-pixel); font-size: 1rem; margin: 0 0 0.5rem; }
+.mensagem { font-size: 1.3rem; max-width: 40ch; margin: 0 auto; }
+
+/* Faixa por onde o sprite corre */
+.palco-celebracao {
+  position: relative; height: calc(var(--tam-celebracao) + 24px);
+  margin: 0 -0.5rem 1rem; overflow: hidden;
+}
+/* Pulo (usa `transform`) + corrida (usa `translate`) ao mesmo tempo */
+.sprite-celebracao.animando {
+  position: absolute; bottom: 0; left: 0; margin: 0;
+  animation: pular 0.6s ease-in-out infinite, correr 5s linear infinite alternate;
+}
+@keyframes pular {
+  0%, 100% { transform: translateY(0) scale(1.05, 0.93); }
+  50%      { transform: translateY(-34px) scale(0.97, 1.05); }
+}
+@keyframes correr {
+  from { translate: 0 0; }
+  to   { translate: calc(100cqw - var(--tam-celebracao)) 0; }
+}
+.palco-celebracao { container-type: inline-size; }
+
+/* Confete em pixels */
+#confetes { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
+.confete {
+  position: absolute; top: -20px; width: 12px; height: 12px;
+  animation: cair linear forwards;
+}
+@keyframes cair { to { transform: translateY(110vh) rotate(360deg); } }
+
+/* ---------- 12. RESPONSIVO + ACESSIBILIDADE ---------- */
+@media (max-width: 520px) {
+  :root { --tam-menu: 80px; --tam-leitura: 96px; --tam-celebracao: 112px; }
+  body { font-size: 1.1rem; }
+  .acoes .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

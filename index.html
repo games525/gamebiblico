@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aventuras da Bíblia – Leitura em Pixel Art</title>
+
+  <!-- Fontes: Press Start 2P (visual 16-bits) + Nunito (texto legível para crianças) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Nuvens decorativas em pixel art (feitas só com CSS) -->
+  <div class="nuvens" aria-hidden="true"></div>
+
+  <header class="topo">
+    <h1>Aventuras da Bíblia</h1>
+    <p class="estrelas" aria-live="polite">⭐ <span id="total-estrelas">0</span>/4</p>
+  </header>
+
+  <main>
+
+    <!-- ========== TELA 1: MENU DE FASES ========== -->
+    <section id="tela-menu" class="tela visivel" aria-labelledby="titulo-menu">
+      <h2 id="titulo-menu">Escolha sua fase!</h2>
+
+      <!-- ▼▼▼ SPRITE DO MENU (opcional) – imagem definida em style.css, variável --img-menu ▼▼▼ -->
+      <div class="sprite-menu" role="img" aria-label="Personagem do jogo dando boas-vindas"></div>
+
+      <!-- Os cartões das histórias são criados pelo script.js -->
+      <ul id="lista-fases" class="fases"></ul>
+    </section>
+
+    <!-- ========== TELA 2: HISTÓRIA ========== -->
+    <section id="tela-historia" class="tela" aria-labelledby="historia-titulo" hidden>
+      <button type="button" class="btn btn-claro" data-acao="menu">← Menu</button>
+
+      <article class="pergaminho">
+        <!-- ▼▼▼ SPRITE DE LEITURA – imagem definida em style.css, variável --img-leitura ▼▼▼ -->
+        <div class="sprite-leitura" role="img" aria-label="Personagem lendo um livro"></div>
+
+        <h2 id="historia-titulo" tabindex="-1"></h2>
+        <div id="historia-texto" class="texto-historia"></div>
+
+        <div class="acoes">
+          <button type="button" id="btn-ouvir" class="btn btn-claro">🔊 Ouvir</button>
+          <button type="button" id="btn-ir-quiz" class="btn btn-verde">Fazer o Quiz</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- ========== TELA 3: QUIZ ========== -->
+    <section id="tela-quiz" class="tela" aria-labelledby="quiz-titulo" hidden>
+      <button type="button" class="btn btn-claro" data-acao="historia">← Reler a história</button>
+
+      <div class="pergaminho">
+        <h2 id="quiz-titulo" tabindex="-1">Quiz</h2>
+        <p id="quiz-progresso" class="progresso-texto"></p>
+        <div class="barra" aria-hidden="true"><div id="quiz-barra" class="barra-cheia"></div></div>
+
+        <h3 id="quiz-pergunta" class="pergunta"></h3>
+        <div id="quiz-opcoes" class="opcoes" role="group" aria-labelledby="quiz-pergunta"></div>
+
+        <p id="quiz-feedback" class="feedback" role="status" aria-live="polite"></p>
+        <div class="acoes">
+          <button type="button" id="btn-proxima" class="btn btn-verde" hidden>Próxima</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TELA 4: RESULTADO ========== -->
+    <section id="tela-resultado" class="tela" aria-labelledby="resultado-titulo" hidden>
+      <div class="pergaminho resultado">
+
+        <!-- Palco da celebração: o sprite pula e corre por aqui quando a criança acerta tudo -->
+        <div id="palco-celebracao" class="palco-celebracao" hidden>
+          <!-- ▼▼▼ SPRITE DE CELEBRAÇÃO – imagem definida em style.css, variável --img-celebracao ▼▼▼ -->
+          <div class="sprite-celebracao" role="img" aria-label="Personagem comemorando"></div>
+        </div>
+
+        <h2 id="resultado-titulo" tabindex="-1"></h2>
+        <p id="resultado-pontos" class="pontos"></p>
+        <p id="resultado-msg" class="mensagem"></p>
+
+        <div class="acoes">
+          <button type="button" id="btn-tentar" class="btn btn-laranja" hidden>Tentar de novo</button>
+          <button type="button" id="btn-reler" class="btn btn-claro" hidden>Reler a história</button>
+          <button type="button" class="btn btn-verde" data-acao="menu">Outras fases</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Chuva de confete em pixels (criada pelo JS) -->
+  <div id="confetes" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
